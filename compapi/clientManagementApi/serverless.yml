@@ -1,0 +1,19 @@
+org: avtrain
+app: graphql-apis
+service: av-clientManagement-api
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 300
+  region: ${opt:region, 'eu-west-2'}
+  stage: ${opt:stage, 'dev'}
+
+plugins:
+  - serverless-offline
+
+functions:
+  hello:
+    handler: ./src/handler.hello
