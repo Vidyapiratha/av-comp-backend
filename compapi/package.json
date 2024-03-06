@@ -1,0 +1,14 @@
+{
+  "name": "compapi",
+  "version": "1.0.0",
+  "description": "Core Compliance API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cloudlabs",
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "^3.38.0"
+  }
+}
