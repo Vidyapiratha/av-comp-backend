@@ -1,0 +1,22 @@
+{
+  "name": "avtrain-comp-backend",
+  "version": "1.0.0",
+  "description": "Avtrauin Compliance Platform Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/TheCloudLabs/av-comp-backend.git"
+  },
+  "author": "Cloudlabs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheCloudLabs/av-comp-backend/issues"
+  },
+  "homepage": "https://github.com/TheCloudLabs/av-comp-backend#readme",
+  "dependencies": {
+    "serverless": "^3.38.0"
+  }
+}
