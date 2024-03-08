@@ -4,12 +4,36 @@ service: av-clientManagement-api
 
 frameworkVersion: "3"
 
+package:
+  individually: true
+  exclude:
+    - layers/**
+
 provider:
   name: aws
   runtime: nodejs18.x
-  timeout: 300
+  timeout: 180
   region: ${opt:region, 'eu-west-2'}
   stage: ${opt:stage, 'dev'}
+
+  environment:
+    STAGE: ${param:stage}
+    ACCOUNT_ID: ${param:account}
+    REGION: ${param:region}
+    DB_HOST: ${param:DB_HOST}
+    DB_PASSWORD: ${param:DB_PASSWORD}
+    DATABASE: ${param:DATABASE}
+    DB_USER: ${param:DB_USER}
+    USER_POOL_ID: ${param:userPoolId}
+
+  vpc:
+    securityGroupIds:
+      - ${param:sgId}
+    subnetIds:
+      - ${param:subnetId}
+
+  layers:
+    - { Ref: AvClientManagementCommonLibsLambdaLayer }
 
 plugins:
   - serverless-offline
@@ -17,3 +41,9 @@ plugins:
 functions:
   hello:
     handler: ./src/handler.hello
+
+layers:
+  avClientManagementCommonLibs:
+    path: layers
+    compatibleRuntimes:
+      - nodejs18.x
