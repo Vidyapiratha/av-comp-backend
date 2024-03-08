@@ -7,8 +7,9 @@
   },
   "devDependencies": {
     "serverless": "^3.33.0",
+    "serverless-appsync-plugin": "^2.7.0",
     "serverless-domain-manager": "^6.1.0",
-    "serverless-offline": "^8.8.1"
+    "serverless-offline": "^13.3.3"
   },
   "author": "",
   "license": "ISC"

@@ -36,14 +36,75 @@ provider:
     - { Ref: AvClientManagementCommonLibsLambdaLayer }
 
 plugins:
+  - serverless-appsync-plugin
   - serverless-offline
 
+custom:
+  genericRequestTemplate: mapping-templates/generic.request.vtl
+  genericResponseTemplate: mapping-templates/generic.response.vtl
+
+appSync:
+  name: ${self:service}-${self:provider.stage}
+  domain:
+    name: ${param:domainName}
+    certificateArn: ${param:certificateARN}
+
+  authentication:
+    type: "AMAZON_COGNITO_USER_POOLS"
+    config:
+      userPoolId: ${param:userPoolId}
+
+  resolvers:
+    Query.testEndpoint:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
+  dataSources:
+    queryClientLambda:
+      type: AWS_LAMBDA
+      description: "Get Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryClientHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientManagementServiceRole
+            - Arn
+
 functions:
-  hello:
-    handler: ./src/handler.hello
+  queryClientHandler:
+    handler: src/queryClientHandler.handler
 
 layers:
   avClientManagementCommonLibs:
     path: layers
     compatibleRuntimes:
       - nodejs18.x
+
+resources:
+  Resources:
+    avClientManagementServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: avClientManagementServiceRole-${self:provider.stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - appsync.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: avClientManagementServiceRole-Policy-${self:provider.stage}
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - lambda:invokeFunction
+                  Resource:
+                    - "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-*"

@@ -1,0 +1,13 @@
+schema {
+  query: Query
+  # mutation: Mutation
+  # subscription: Subscription
+}
+
+type Query {
+  testEndpoint(id: ID!): testEndpoint!
+}
+
+type testEndpoint {
+  status: String
+}
