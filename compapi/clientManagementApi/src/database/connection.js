@@ -3,25 +3,51 @@ const initOptions = {
 };
 
 const pgp = require("pg-promise")(initOptions);
+const { getSecret } = require("../utils/secrets");
 
-const pgConfig = {
-  host: process.env.DB_HOST,
-  port: 5432,
-  database: process.env.DATABASE,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  idleTimeoutMillis: 3000,
-  max: 10,
-  min: 1,
-  query_timeout: 10000,
-  ssl: true,
+const connectDB = async () => {
+  const { username, password } = await getSecret(process.env.DB_SECRETS);
+  console.log("the db user::", username, password);
+
+  const pgConfig = {
+    host: process.env.DB_HOST,
+    port: 5432,
+    database: process.env.DATABASE,
+    user: username,
+    password: password,
+    idleTimeoutMillis: 3000,
+    max: 10,
+    min: 1,
+    query_timeout: 10000,
+    ssl: true,
+  };
+
+  const db = pgp(pgConfig);
+
+  console.log("db connected");
+
+  return db;
 };
 
-const pgDb = pgp(pgConfig);
+let pgDb = null;
+const pgDbPromise = async () => {
+  if (!pgDb) {
+    try {
+      pgDb = await connectDB();
+    } catch (error) {
+      console.log("db initialization error::", error);
+
+      throw Error("Internal server error!");
+    }
+  }
+
+  return pgDb;
+};
+pgDbPromise();
 
 const disconnectDB = () => pgp.end();
 
 module.exports = {
-  pgDb,
+  pgDbPromise,
   disconnectDB,
 };
