@@ -16,14 +16,22 @@ provider:
   region: ${opt:region, 'eu-west-2'}
   stage: ${opt:stage, 'dev'}
 
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource:
+            - "arn:aws:secretsmanager:${self:provider.region}:${param:account}:secret:*"
+
   environment:
     STAGE: ${param:stage}
     ACCOUNT_ID: ${param:account}
     REGION: ${param:region}
     DB_HOST: ${param:DB_HOST}
-    DB_PASSWORD: ${param:DB_PASSWORD}
+    DB_SECRETS: ${param:DB_SECRETS}
     DATABASE: ${param:DATABASE}
-    DB_USER: ${param:DB_USER}
     USER_POOL_ID: ${param:userPoolId}
 
   vpc:
