@@ -43,7 +43,6 @@ const pgDbPromise = async () => {
 
   return pgDb;
 };
-pgDbPromise();
 
 const disconnectDB = () => pgp.end();
 
