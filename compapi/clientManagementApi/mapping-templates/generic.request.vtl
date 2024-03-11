@@ -3,6 +3,9 @@
     "operation": "Invoke",
     "payload": {
         "field": $utils.toJson($context.info.fieldName),
-        "arguments":  $utils.toJson($context.arguments)
+        "arguments":  $utils.toJson($context.arguments),
+        "info": $utils.toJson($context.info),
+        "source": $utils.toJson($context.source),
+        "identity": $utils.toJson($context.identity)
     }
 }

@@ -1,11 +1,97 @@
 schema {
   query: Query
-  # mutation: Mutation
+  mutation: Mutation
   # subscription: Subscription
 }
 
 type Query {
-  testEndpoint(id: ID!): testEndpoint!
+  checkPortalClientUsernameAbility(
+    username: String!
+  ): PortalClientUsernameAbility!
+}
+
+type Mutation {
+  createPortalClient(
+    username: String!
+    contact_name: String
+    contact_phone: String
+    contact_email: String
+    address: AddressInput
+  ): PortalClient!
+}
+
+type PortalClient {
+  id: ID!
+  username: String!
+  contact_number: String
+  contact_phone: String
+  contact_email: AWSEmail
+  enabled: Boolean
+  address: Address
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type PortalUser {
+  id: ID!
+  email: AWSEmail
+  client_id: String!
+  client: PortalClient
+  first_name: String
+  last_name: String
+  phone: AWSPhone
+  is_active: Boolean
+  user_role_id: ID!
+  user_role: PortalUserRole
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type PortalUserRole {
+  id: ID!
+  role_name: RoleName
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type Address {
+  address: String
+  apartment_suite: String
+  city: String
+  postal_code: String
+  state_or_region: String
+  country: String
+}
+
+input AddressInput {
+  address: String
+  apartment_suite: String
+  city: String
+  postal_code: String
+  state_or_region: String
+  country: String
+}
+
+type PortalClientUsernameAbility {
+  is_available: Boolean!
+}
+
+enum RoleName {
+  MASTER_USER
+  CLIENT_USER
+  NORMAL_USER
 }
 
 type testEndpoint {
