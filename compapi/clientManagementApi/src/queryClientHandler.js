@@ -1,16 +1,21 @@
 "use strict";
 
-const { testEndpoint } = require("./resolvers/queryClientResolver");
+const { setAuth } = require("./middlewares/auth");
+const {
+  checkPortalClientUsernameAbility,
+} = require("./resolvers/queryClientResolver");
 
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
+
+  await setAuth(event?.identity?.claims?.sub);
 
   try {
     let result;
 
     switch (event.field) {
-      case "testEndpoint": {
-        result = await testEndpoint(event.arguments);
+      case "checkPortalClientUsernameAbility": {
+        result = await checkPortalClientUsernameAbility(event.arguments);
         break;
       }
       default:
