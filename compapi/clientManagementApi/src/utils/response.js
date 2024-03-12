@@ -1,4 +1,4 @@
-module.exports = ({ result }) => {
+module.exports = ({ result, others = {} }) => {
   if (Array.isArray(result)) {
     let nextOffset =
       others?.limit === result?.length

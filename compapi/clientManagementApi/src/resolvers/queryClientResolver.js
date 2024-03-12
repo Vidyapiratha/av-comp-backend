@@ -35,7 +35,8 @@ const getPortalClients = async (args) => {
   });
 
   return response({
-    result: result.data,
+    result: result,
+    others: args,
   });
 };
 
