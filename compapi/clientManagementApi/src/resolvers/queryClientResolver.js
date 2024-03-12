@@ -2,6 +2,7 @@ const {
   getPortalClientIdByUsername,
   getPortalClientsQuery,
 } = require("../queries/portalClient");
+const response = require("../utils/response");
 const { USER_ROLES } = require("../utils/constants");
 const { PERMISSION_DENIED } = require("../utils/createError");
 
@@ -27,16 +28,18 @@ const getPortalClients = async (args) => {
   let sort = args.sort || "ASC";
 
   const result = await getPortalClientsQuery({
+    fetchRelations: true,
     limit,
     offset,
     sort,
   });
 
-  return result;
+  return response({
+    result: result.data,
+  });
 };
 
 module.exports = {
   checkPortalClientUsernameAbility,
   getPortalClients,
-  getPortalClient,
 };
