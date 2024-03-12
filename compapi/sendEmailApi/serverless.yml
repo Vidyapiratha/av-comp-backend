@@ -1,0 +1,100 @@
+org: halosolutionsltd
+app: halo-rest-apis
+service: halo-mailerApi
+
+projectDir: ../
+frameworkVersion: "3"
+
+package:
+  individually: true
+
+plugins:
+  - serverless-offline
+  - serverless-domain-manager
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: eu-west-1
+  timeout: 30
+  stage: ${opt:stage, 'dev'}
+
+  environment:
+    STAGE: "dev"
+    QUEUE_URL: https://sqs.${aws:region}.amazonaws.com/${aws:accountId}/${param:SQS_MESSAGE_QUEUE_NAME}
+    IMPROVMX_API_KEY: ${param:IMPROVMX_API_KEY}
+    IMPROVMX_MAIL_DOMAIN: ${param:IMPROVMX_MAIL_DOMAIN}
+    SQS_MESSAGE_TABLE_NAME: ${param:SQS_MESSAGE_TABLE_NAME}
+    SOURCE_EMAIL: "donotreply@halomailer.com"
+    SG_ID: ${param:sgId}
+    SUBNET_ID: ${param:subnetId}
+    DOMAIN_NAME: ${param:domainName}
+    CERTIFICATE_ARN: ${param:certificateARN}
+  vpc:
+    securityGroupIds:
+      - ${self:provider.environment.SG_ID}
+    subnetIds:
+      - ${self:provider.environment.SUBNET_ID}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: !GetAtt HaloSQSMessageTable.Arn
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource: !GetAtt HaloSQSMessageQueue.Arn
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+      # Condition:
+      #   ForAllValues:StringLike:
+      #     ses:Recipients:
+      #       - "*@halomailer.com"
+      #     ses:FromAddress:
+      #       - "donotreply@halomailer.com"
+      # - arn:aws:ses:${self:provider.region}:${aws:accountId}:identity/donotreply@halomailer.com
+      # - arn:aws:ses:${self:provider.region}:${aws:accountId}:identity/iam.amanattrish@gmail.com # TODO: remove it
+custom:
+  customDomain:
+    domainName: ${self:provider.environment.DOMAIN_NAME}
+    certificateArn: ${self:provider.environment.CERTIFICATE_ARN}
+    autoDomain: true
+functions:
+  pushMessage:
+    handler: ./src/index.pushMessage
+    events:
+      - http:
+          path: message/push
+          method: post
+          cors: true
+  sendEmail:
+    handler: ./src/index.sendEmail
+    events:
+      - sqs:
+          arn: !GetAtt HaloSQSMessageQueue.Arn
+          batchSize: 10
+          maximumBatchingWindow: 10
+
+resources:
+  Resources:
+    # DDB Table
+    HaloSQSMessageTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${param:SQS_MESSAGE_TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: messageKey
+            AttributeType: S
+        KeySchema:
+          - AttributeName: messageKey
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    #SQS Queue
+    HaloSQSMessageQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${param:SQS_MESSAGE_QUEUE_NAME}
