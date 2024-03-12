@@ -1,6 +1,6 @@
-org: halosolutionsltd
-app: halo-rest-apis
-service: halo-mailerApi
+org: avtrain
+app: rest-apis
+service: av-sendmailapi
 
 projectDir: ../
 frameworkVersion: "3"
@@ -11,21 +11,20 @@ package:
 plugins:
   - serverless-offline
   - serverless-domain-manager
+  - serverless-python-requirements
 
 provider:
   name: aws
-  runtime: nodejs16.x
-  region: eu-west-1
+  runtime: python3.11
+  region: eu-west-2
   timeout: 30
   stage: ${opt:stage, 'dev'}
 
   environment:
     STAGE: "dev"
     QUEUE_URL: https://sqs.${aws:region}.amazonaws.com/${aws:accountId}/${param:SQS_MESSAGE_QUEUE_NAME}
-    IMPROVMX_API_KEY: ${param:IMPROVMX_API_KEY}
-    IMPROVMX_MAIL_DOMAIN: ${param:IMPROVMX_MAIL_DOMAIN}
     SQS_MESSAGE_TABLE_NAME: ${param:SQS_MESSAGE_TABLE_NAME}
-    SOURCE_EMAIL: "donotreply@halomailer.com"
+    SOURCE_EMAIL: "donotreply@avtrain.dev"
     SG_ID: ${param:sgId}
     SUBNET_ID: ${param:subnetId}
     DOMAIN_NAME: ${param:domainName}
