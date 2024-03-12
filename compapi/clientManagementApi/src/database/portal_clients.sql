@@ -6,7 +6,6 @@ create table "portal_clients" (
   contact_email VARCHAR(255) NULL,
   enabled BOOLEAN NOT NULL DEFAULT True,
   address JSONB NULL,
-  role VARCHAR(255) NULL,
 
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

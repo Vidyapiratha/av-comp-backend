@@ -24,11 +24,6 @@ provider:
             - "secretsmanager:GetSecretValue"
           Resource:
             - "arn:aws:secretsmanager:${self:provider.region}:${param:account}:secret:*"
-        - Effect: Allow
-          Action:
-            - cognito-idp:*
-          Resource:
-            - arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-*
 
   environment:
     STAGE: ${param:stage}
@@ -69,6 +64,11 @@ appSync:
 
   resolvers:
     Query.checkPortalClientUsernameAbility:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+    Query.getPortalClients:
       dataSource: queryClientLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
