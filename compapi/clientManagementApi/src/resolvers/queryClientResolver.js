@@ -1,6 +1,7 @@
 const {
   getPortalClientIdByUsername,
   getPortalClientsQuery,
+  getPortalClientById,
 } = require("../queries/portalClient");
 const response = require("../utils/response");
 const { USER_ROLES } = require("../utils/constants");
@@ -19,6 +20,22 @@ const checkPortalClientUsernameAbility = async (args) => {
   return result;
 };
 
+const getPortalClient = async (args) => {
+  const authUser = global.auth;
+  if (
+    authUser.role_name !== USER_ROLES.MASTER &&
+    authUser.role_name !== USER_ROLES.CLIENT
+  ) {
+    throw PERMISSION_DENIED();
+  }
+
+  const result = await getPortalClientById({ id: args.id });
+
+  return response({
+    result,
+  });
+};
+
 const getPortalClients = async (args) => {
   const authUser = global.auth;
   if (authUser.role_name !== USER_ROLES.MASTER) throw PERMISSION_DENIED();
@@ -28,7 +45,6 @@ const getPortalClients = async (args) => {
   let sort = args.sort || "ASC";
 
   const result = await getPortalClientsQuery({
-    fetchRelations: true,
     limit,
     offset,
     sort,
@@ -43,4 +59,5 @@ const getPortalClients = async (args) => {
 module.exports = {
   checkPortalClientUsernameAbility,
   getPortalClients,
+  getPortalClient,
 };

@@ -8,6 +8,7 @@ type Query {
   checkPortalClientUsernameAbility(username: String!): Ability!
 
   getPortalClients(limit: Int, offset: Int, sort: SORT): PortalClientsResponse
+  getPortalClient(id: ID!): PortalClient
 }
 
 type Mutation {

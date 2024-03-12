@@ -72,7 +72,7 @@ const getPortalClientIdById = async (id) => {
   }
 };
 
-const getPortalClientById = async (id) => {
+const getPortalClientById = async ({ id }) => {
   const query = {
     text: `SELECT * FROM portal_clients
             WHERE id = $1 and NOT deleted limit 1`,

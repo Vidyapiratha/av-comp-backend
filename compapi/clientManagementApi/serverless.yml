@@ -68,6 +68,11 @@ appSync:
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
+    Query.getPortalClient:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
     Query.getPortalClients:
       dataSource: queryClientLambda
       request: ${self:custom.genericRequestTemplate}
