@@ -96,9 +96,35 @@ const getPortalClientById = async (id) => {
   }
 };
 
+const getPortalClientsQuery = async ({
+  offset = 0,
+  limit = 100,
+  sort = "ASC",
+}) => {
+  let queryText = "SELECT * FROM portal_clients as p_c";
+
+  queryText += ` WHERE NOT p_c.deleted`;
+  queryText += ` Order By p_c.username ${sort} OFFSET ${offset} LIMIT ${limit}`;
+
+  try {
+    const pdDb = await pgDbPromise();
+
+    let data = await pdDb.query(queryText);
+
+    console.log("The portal clients::", data);
+
+    return data;
+  } catch (error) {
+    console.log("Error on getting clients:::", error);
+
+    return { data: [], totalClients: null };
+  }
+};
+
 module.exports = {
   getPortalClientIdByUsername,
   getPortalClientByUsername,
   getPortalClientIdById,
   getPortalClientById,
+  getPortalClientsQuery,
 };

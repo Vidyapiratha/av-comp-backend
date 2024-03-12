@@ -3,6 +3,7 @@
 const { setAuth } = require("./middlewares/auth");
 const {
   checkPortalClientUsernameAbility,
+  getPortalClients,
 } = require("./resolvers/queryClientResolver");
 
 module.exports.handler = async (event) => {
@@ -16,6 +17,10 @@ module.exports.handler = async (event) => {
     switch (event.field) {
       case "checkPortalClientUsernameAbility": {
         result = await checkPortalClientUsernameAbility(event.arguments);
+        break;
+      }
+      case "getPortalClients": {
+        result = await getPortalClients(event.arguments);
         break;
       }
       default:
