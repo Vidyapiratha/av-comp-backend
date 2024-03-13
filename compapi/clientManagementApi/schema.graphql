@@ -9,6 +9,8 @@ type Query {
 
   getPortalClients(limit: Int, offset: Int, sort: SORT): PortalClientsResponse
   getPortalClient(id: ID!): PortalClient
+
+  getMe: PortalUser!
 }
 
 type Mutation {

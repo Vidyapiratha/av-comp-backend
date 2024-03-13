@@ -79,6 +79,12 @@ appSync:
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
 
+    Query.getMe:
+      dataSource: queryUserLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
     Mutation.createPortalClient:
       dataSource: mutationClientLambda
       request: ${self:custom.genericRequestTemplate}
@@ -106,12 +112,24 @@ appSync:
           Fn::GetAtt:
             - avClientManagementServiceRole
             - Arn
+    queryUserLambda:
+      type: AWS_LAMBDA
+      description: "Get Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryUserHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientManagementServiceRole
+            - Arn
 
 functions:
   queryClientHandler:
     handler: src/queryClientHandler.handler
   mutationClientHandler:
     handler: src/mutationClientHandler.handler
+  queryUserHandler:
+    handler: src/queryUserHandler.handler
 
 layers:
   avClientManagementCommonLibs:
