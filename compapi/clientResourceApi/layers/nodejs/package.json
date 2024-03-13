@@ -1,0 +1,12 @@
+{
+  "name": "avClientManagement-Layer",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "^2.1375.0",
+    "graphql": "^16.6.0",
+    "moment": "^2.29.4",
+    "pg-promise": "^11.4.3",
+    "uuid": "^8.3.2"
+  }
+}

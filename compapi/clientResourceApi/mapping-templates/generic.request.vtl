@@ -1,0 +1,11 @@
+{
+    "version": "2017-02-28",
+    "operation": "Invoke",
+    "payload": {
+        "field": $utils.toJson($context.info.fieldName),
+        "arguments":  $utils.toJson($context.arguments),
+        "selectionSetList": $utils.toJson($context.info.selectionSetList),
+        "source": $utils.toJson($context.source),
+        "identity": $utils.toJson($context.identity)
+    }
+}

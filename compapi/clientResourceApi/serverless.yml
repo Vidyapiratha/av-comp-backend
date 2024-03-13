@@ -1,0 +1,164 @@
+org: avtrain
+app: graphql-apis
+service: av-clientresourcesapi
+
+frameworkVersion: "3"
+
+package:
+  individually: true
+  exclude:
+    - layers/**
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 180
+  region: ${opt:region, 'eu-west-2'}
+  stage: ${opt:stage, 'dev'}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource:
+            - "arn:aws:secretsmanager:${self:provider.region}:${param:account}:secret:*"
+
+  environment:
+    STAGE: ${param:stage}
+    ACCOUNT_ID: ${param:account}
+    REGION: ${param:region}
+    DB_HOST: ${param:DB_HOST}
+    DB_SECRETS: ${param:DB_SECRETS}
+    DATABASE: ${param:DATABASE}
+    USER_POOL_ID: ${param:userPoolId}
+
+  vpc:
+    securityGroupIds:
+      - ${param:sgId}
+    subnetIds:
+      - ${param:subnetId}
+
+  layers:
+    - { Ref: AvClientManagementCommonLibsLambdaLayer }
+
+plugins:
+  - serverless-appsync-plugin
+  - serverless-offline
+
+custom:
+  genericRequestTemplate: mapping-templates/generic.request.vtl
+  genericResponseTemplate: mapping-templates/generic.response.vtl
+
+appSync:
+  name: ${self:service}-${self:provider.stage}
+  domain:
+    name: ${param:domainName}
+    certificateArn: ${param:certificateARN}
+
+  authentication:
+    type: "AMAZON_COGNITO_USER_POOLS"
+    config:
+      userPoolId: ${param:userPoolId}
+
+  resolvers:
+    Query.checkPortalClientUsernameAbility:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+    Query.getPortalClient:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+    Query.getPortalClients:
+      dataSource: queryClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
+    Query.getMe:
+      dataSource: queryUserLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
+    Mutation.createPortalClient:
+      dataSource: mutationClientLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
+  dataSources:
+    queryClientLambda:
+      type: AWS_LAMBDA
+      description: "Get Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryClientHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientManagementServiceRole
+            - Arn
+    mutationClientLambda:
+      type: AWS_LAMBDA
+      description: "Create or Update Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-mutationClientHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientManagementServiceRole
+            - Arn
+    queryUserLambda:
+      type: AWS_LAMBDA
+      description: "Get Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryUserHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientManagementServiceRole
+            - Arn
+
+functions:
+  queryClientHandler:
+    handler: src/queryClientHandler.handler
+  mutationClientHandler:
+    handler: src/mutationClientHandler.handler
+  queryUserHandler:
+    handler: src/queryUserHandler.handler
+
+layers:
+  avClientManagementCommonLibs:
+    path: layers
+    compatibleRuntimes:
+      - nodejs18.x
+
+resources:
+  Resources:
+    avClientManagementServiceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: avClientManagementServiceRole-${self:provider.stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - appsync.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: avClientManagementServiceRole-Policy-${self:provider.stage}
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - lambda:invokeFunction
+                  Resource:
+                    - "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-*"
