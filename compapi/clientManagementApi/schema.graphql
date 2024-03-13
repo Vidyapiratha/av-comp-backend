@@ -1,0 +1,114 @@
+schema {
+  query: Query
+  mutation: Mutation
+  # subscription: Subscription
+}
+
+type Query {
+  checkPortalClientUsernameAbility(username: String!): Ability!
+
+  getPortalClients(limit: Int, offset: Int, sort: SORT): PortalClientsResponse
+  getPortalClient(id: ID!): PortalClient
+
+  getMe: PortalUser!
+}
+
+type Mutation {
+  createPortalClient(
+    username: String!
+    contact_name: String
+    contact_phone: AWSPhone
+    contact_email: AWSEmail
+    address: AddressInput
+  ): PortalClient!
+}
+
+type PortalClient {
+  id: ID!
+  username: String!
+  contact_name: String
+  contact_phone: AWSPhone
+  contact_email: AWSEmail
+  enabled: Boolean
+  address: Address
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type PortalUser {
+  id: ID!
+  email: AWSEmail
+  client_id: String!
+  client: PortalClient
+  first_name: String
+  last_name: String
+  phone: AWSPhone
+  is_active: Boolean
+  user_role_id: ID!
+  user_role: PortalUserRole
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type PortalUserRole {
+  id: ID!
+  role_name: RoleName
+  created_at: AWSDateTime
+  updated_at: AWSDateTime
+  created_by_id: ID
+  created_by: PortalUser
+  updated_by_id: ID
+  updated_by: PortalUser
+}
+
+type Address {
+  address: String
+  apartment_suite: String
+  city: String
+  postal_code: String
+  state_or_region: String
+  country: String
+}
+
+input AddressInput {
+  address: String
+  apartment_suite: String
+  city: String
+  postal_code: String
+  state_or_region: String
+  country: String
+}
+
+type Ability {
+  is_available: Boolean!
+}
+
+type PortalClientsResponse {
+  items: [PortalClient]
+  count: Int
+  totalCount: Int
+  nextOffset: Int
+}
+
+enum SORT {
+  ASC
+  DESC
+}
+
+enum RoleName {
+  MASTER_USER
+  CLIENT_USER
+  NORMAL_USER
+}
+
+type testEndpoint {
+  status: String
+}
