@@ -78,6 +78,11 @@ appSync:
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
+    Mutation.updateAircraftStatus:
+      dataSource: mutationAircraftLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
 
   dataSources:
     queryAircraftLambda:

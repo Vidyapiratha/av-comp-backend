@@ -3,6 +3,7 @@ const { setAuth } = require("./middlewares/auth");
 const {
   createAircraft,
   updateAircraft,
+  updateAircraftStatus,
 } = require("./resolvers/mutationAircraftResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
@@ -17,6 +18,10 @@ module.exports.handler = async (event) => {
       }
       case "updateAircraft": {
         result = await updateAircraft(event.arguments);
+        break;
+      }
+      case "updateAircraftStatus": {
+        result = await updateAircraftStatus(event.arguments);
         break;
       }
       default:

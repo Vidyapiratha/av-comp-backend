@@ -4,7 +4,10 @@ const {
   PERMISSION_DENIED,
   INTERNAL_SERVER_ERROR,
 } = require("../utils/createError");
-const { executeInsertOperation, executeUpdateOperation } = require("../utils/helpers");
+const {
+  executeInsertOperation,
+  executeUpdateOperation,
+} = require("../utils/helpers");
 const createAircraft = async (args) => {
   const authUser = global.auth;
   if (authUser.role_name === USER_ROLES.USER) {
@@ -51,7 +54,6 @@ const updateAircraft = async (args) => {
     }
   }
   const client_aircraft = {
-    client_id: args.client_id?.trim(),
     uas_active: args.uas_active,
     uas_manufacturer: args.uas_manufacturer?.trim(),
     uas_model: args.uas_model?.trim(),
@@ -60,7 +62,38 @@ const updateAircraft = async (args) => {
   };
   const condition_Object = {
     id: args.id?.trim(),
+  };
+  const response = await executeUpdateOperation({
+    tableName: DB_TABLES.CLIENT_AIRCRAFTS,
+    inputAsObject: client_aircraft,
+    conditionAsObject: condition_Object,
+    returnColumnsAsString: "*",
+  });
+  if (response.error) throw INTERNAL_SERVER_ERROR();
+
+  return response.data;
+};
+
+const updateAircraftStatus = async (args) => {
+  const authUser = global.auth;
+  if (authUser.role_name === USER_ROLES.USER) {
+    throw PERMISSION_DENIED();
   }
+  if (
+    authUser.role_name === USER_ROLES.ADMIN ||
+    authUser.role_name === USER_ROLES.SUPERADMIN
+  ) {
+    if (authUser.client_id !== args.client_id) {
+      throw PERMISSION_DENIED();
+    }
+  }
+  const client_aircraft = {
+    uas_active: args.uas_active,
+    updated_by: authUser.id,
+  };
+  const condition_Object = {
+    id: args.id?.trim(),
+  };
   const response = await executeUpdateOperation({
     tableName: DB_TABLES.CLIENT_AIRCRAFTS,
     inputAsObject: client_aircraft,
@@ -75,4 +108,5 @@ const updateAircraft = async (args) => {
 module.exports = {
   createAircraft,
   updateAircraft,
+  updateAircraftStatus,
 };
