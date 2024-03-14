@@ -53,9 +53,9 @@ custom:
 
 appSync:
   name: ${self:service}-${self:provider.stage}
-  #domain:
-    #name: ${param:domainName}
-    #certificateArn: ${param:certificateARN}
+  domain:
+    name: ${param:domainName}
+    certificateArn: ${param:certificateARN}
 
   authentication:
     type: "AMAZON_COGNITO_USER_POOLS"
