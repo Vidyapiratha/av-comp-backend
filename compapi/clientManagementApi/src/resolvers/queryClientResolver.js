@@ -1,17 +1,19 @@
 const {
-  getPortalClientIdByUsername,
   getPortalClientsQuery,
   getPortalClientById,
+  getPortalClientIdByCompanyName,
 } = require("../queries/portalClient");
 const response = require("../utils/response");
 const { USER_ROLES } = require("../utils/constants");
 const { PERMISSION_DENIED } = require("../utils/createError");
 
-const checkPortalClientUsernameAbility = async (args) => {
+const checkPortalClientCompanyNameAbility = async (args) => {
   const authUser = global.auth;
   if (authUser.role_name !== USER_ROLES.MASTER) throw PERMISSION_DENIED();
 
-  const existedClientId = await getPortalClientIdByUsername(args.username);
+  const existedClientId = await getPortalClientIdByCompanyName(
+    args.company_name
+  );
 
   const result = {
     is_available: existedClientId ? false : true,
@@ -57,7 +59,7 @@ const getPortalClients = async (args) => {
 };
 
 module.exports = {
-  checkPortalClientUsernameAbility,
   getPortalClients,
   getPortalClient,
+  checkPortalClientCompanyNameAbility,
 };
