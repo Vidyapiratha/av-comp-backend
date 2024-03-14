@@ -84,7 +84,7 @@ appSync:
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-    Query.checkPortalUserAbility:
+    Query.checkPortalUserEmailAbility:
       dataSource: queryUserLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}

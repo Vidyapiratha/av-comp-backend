@@ -17,7 +17,7 @@ const getMe = async () => {
   return response({ result });
 };
 
-const checkPortalUserAbility = async (args) => {
+const checkPortalUserEmailAbility = async (args) => {
   const authUser = global.auth;
   if (
     authUser.role_name !== USER_ROLES.MASTER &&
@@ -37,5 +37,5 @@ const checkPortalUserAbility = async (args) => {
 
 module.exports = {
   getMe,
-  checkPortalUserAbility,
+  checkPortalUserEmailAbility,
 };

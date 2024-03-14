@@ -3,7 +3,7 @@
 const { validateIdentity, setAuth } = require("./middlewares/auth");
 const {
   getMe,
-  checkPortalUserAbility,
+  checkPortalUserEmailAbility,
 } = require("./resolvers/queryUserResolver");
 
 module.exports.handler = async (event) => {
@@ -19,9 +19,9 @@ module.exports.handler = async (event) => {
         result = await getMe();
         break;
       }
-      case "checkPortalUserAbility": {
+      case "checkPortalUserEmailAbility": {
         await setAuth(event?.identity?.claims?.sub);
-        result = await checkPortalUserAbility(event.arguments);
+        result = await checkPortalUserEmailAbility(event.arguments);
         break;
       }
 
