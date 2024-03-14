@@ -1,9 +1,24 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 type Query {
-  getAircraftByClientId(clientId: String, limit: Int!, skip: Int!): AircraftResponse
+  getAircraftByClientId(
+    clientId: String
+    limit: Int!
+    skip: Int!
+  ): AircraftResponse
+}
+
+type Mutation {
+  createAircraft(
+    client_id: String!
+    uas_active: Boolean!
+    uas_manufacturer: String!
+    uas_model: String!
+    uas_details: UasDetailInput
+  ): ClientAircraft!
 }
 
 type AircraftResponse {
@@ -11,12 +26,12 @@ type AircraftResponse {
   count: Int
   totalCount: Int
   nextOffset: Int
-} 
+}
 
 type ClientAircraft {
   id: ID!
   client_id: String!
-  uas_manufacture: String!
+  uas_manufacturer: String!
   uas_model: String!
   uas_active: Boolean!
   uas_details: UasDetail
@@ -49,7 +64,7 @@ type UasDetail {
   uas_other_notes: String
 }
 
-type UasDetailInput {
+input UasDetailInput {
   uas_mcd: Int
   uas_max_ascend_speedms: Int
   uas_max_speedms: Int
@@ -76,4 +91,3 @@ enum SORT {
   ASC
   DESC
 }
-

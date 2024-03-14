@@ -7,8 +7,7 @@ const getPortalUserById = async (id) => {
         JOIN portal_clients as p_c
           On p_c.id = p_u.client_id`;
 
-  queryText += ` WHERE p_u.id = $1 and 
-    NOT p_u.deleted AND p_u.is_active AND NOT p_c.deleted AND p_c.enabled limit 1`;
+  queryText += ` WHERE p_u.id = $1 AND p_u.is_active AND p_c.enabled limit 1`;
 
   const query = {
     text: queryText,

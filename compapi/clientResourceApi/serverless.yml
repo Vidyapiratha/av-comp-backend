@@ -68,6 +68,11 @@ appSync:
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
+    Mutation.createAircraft:
+      dataSource: mutationAircraftLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
 
   dataSources:
     queryAircraftLambda:
@@ -80,10 +85,22 @@ appSync:
           Fn::GetAtt:
             - avClientResourceServiceRole
             - Arn
+    mutationAircraftLambda:
+      type: AWS_LAMBDA
+      description: "Get Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-mutationAircraftHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientResourceServiceRole
+            - Arn
 
 functions:
   queryAircraftHandler:
     handler: src/queryAircraftHandler.handler
+  mutationAircraftHandler:
+    handler: src/mutationAircraftHandler.handler
 
 layers:
   avClientResourceCommonLibs:

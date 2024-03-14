@@ -1,5 +1,5 @@
 create table "client_aircrafts" (
-  id VARCHAR(255) NOT NULL PRIMARY KEY,
+  id VARCHAR(255) NOT NULL PRIMARY KEY uuid_generate_v4(),
   client_id VARCHAR(255) NOT NULL,
   uas_manufacture VARCHAR(255) NOT NULL,
   uas_model VARCHAR(255) NOT NULL,

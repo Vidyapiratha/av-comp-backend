@@ -4,11 +4,15 @@ const { PERMISSION_DENIED } = require("../utils/createError");
 const { getAircraftByClientId } = require("../queries/getAircraftByClientId");
 const getAircraftByClientIdResolver = async (args) => {
   const authUser = global.auth;
-  if (authUser.role_name === USER_ROLES.NORMAL) {
+  if (authUser.role_name === USER_ROLES.USER) {
     throw PERMISSION_DENIED();
   }
 
-  const result = await getAircraftByClientId({ clientId: args.clientId, limit: args.limit, skip: args.skip });
+  const result = await getAircraftByClientId({
+    clientId: args.clientId,
+    limit: args.limit,
+    skip: args.skip,
+  });
 
   return response({
     result,

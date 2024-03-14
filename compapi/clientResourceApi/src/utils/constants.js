@@ -1,7 +1,8 @@
 const USER_ROLES = {
-  MASTER: "MASTER_USER",
-  CLIENT: "CLIENT_USER",
-  NORMAL: "NORMAL_USER",
+  MASTER: "MASTER",
+  SUPERADMIN: "SUPERADMIN",
+  ADMIN: "ADMIN",
+  USER: "USER",
 };
 
 module.exports = {
