@@ -1,6 +1,6 @@
 const { pgDbPromise } = require("../database/connection");
 
-const getPortalUserById = async ({ id }) => {
+const getPortalUserById = async (id) => {
   let queryText = `SELECT p_u.*, p_r.role_name FROM portal_users as p_u
         JOIN portal_user_roles as p_r
             ON p_u.user_role_id = p_r.id

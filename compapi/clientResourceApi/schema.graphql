@@ -1,101 +1,75 @@
 schema {
   query: Query
-  mutation: Mutation
-  # subscription: Subscription
 }
 
 type Query {
-  checkPortalClientUsernameAbility(username: String!): Ability!
-
-  getPortalClients(limit: Int, offset: Int, sort: SORT): PortalClientsResponse
-  getPortalClient(id: ID!): PortalClient
-
-  getMe: PortalUser!
+  getAircraftByClientId(clientId: String, limit: Int!, skip: Int!): AircraftResponse
 }
 
-type Mutation {
-  createPortalClient(
-    username: String!
-    contact_name: String
-    contact_phone: AWSPhone
-    contact_email: AWSEmail
-    address: AddressInput
-  ): PortalClient!
-}
-
-type PortalClient {
-  id: ID!
-  username: String!
-  contact_name: String
-  contact_phone: AWSPhone
-  contact_email: AWSEmail
-  enabled: Boolean
-  address: Address
-  created_at: AWSDateTime
-  updated_at: AWSDateTime
-  created_by_id: ID
-  created_by: PortalUser
-  updated_by_id: ID
-  updated_by: PortalUser
-}
-
-type PortalUser {
-  id: ID!
-  email: AWSEmail
-  client_id: String!
-  client: PortalClient
-  first_name: String
-  last_name: String
-  phone: AWSPhone
-  is_active: Boolean
-  user_role_id: ID!
-  user_role: PortalUserRole
-  created_at: AWSDateTime
-  updated_at: AWSDateTime
-  created_by_id: ID
-  created_by: PortalUser
-  updated_by_id: ID
-  updated_by: PortalUser
-}
-
-type PortalUserRole {
-  id: ID!
-  role_name: RoleName
-  created_at: AWSDateTime
-  updated_at: AWSDateTime
-  created_by_id: ID
-  created_by: PortalUser
-  updated_by_id: ID
-  updated_by: PortalUser
-}
-
-type Address {
-  address: String
-  apartment_suite: String
-  city: String
-  postal_code: String
-  state_or_region: String
-  country: String
-}
-
-input AddressInput {
-  address: String
-  apartment_suite: String
-  city: String
-  postal_code: String
-  state_or_region: String
-  country: String
-}
-
-type Ability {
-  is_available: Boolean!
-}
-
-type PortalClientsResponse {
-  items: [PortalClient]
+type AircraftResponse {
+  items: [ClientAircraft]
   count: Int
   totalCount: Int
   nextOffset: Int
+} 
+
+type ClientAircraft {
+  id: ID!
+  client_id: String!
+  uas_manufacture: String!
+  uas_model: String!
+  uas_active: Boolean!
+  uas_details: UasDetail
+  created_on: AWSDateTime
+  updated_on: AWSDateTime
+  created_by: String
+  updated_by: String
+}
+
+type UasDetail {
+  uas_mcd: Int
+  uas_max_ascend_speedms: Int
+  uas_max_speedms: Int
+  uas_flight_geography_height: Int
+  uas_conformity: Boolean
+  uas_fts_fitted: Boolean
+  uas_fts_manufacturer: String
+  uas_fts_model: String
+  uas_fts_independent: Boolean
+  uas_means_to_reduce_impact: String
+  uas_parachute_descentms: Int
+  uas_means_go_reduce_impact_other: String
+  uas_c2_range: Int
+  uas_ip_rating: String
+  uas_remote_id_fitted: Boolean
+  uas_anti_col_beacon: Boolean
+  uas_manual_link: String
+  uas_maintenance_manual_link: String
+  uas_ftp_manual_link: String
+  uas_other_notes: String
+}
+
+type UasDetailInput {
+  uas_mcd: Int
+  uas_max_ascend_speedms: Int
+  uas_max_speedms: Int
+  uas_flight_geography_height: Int
+  uas_conformity: Boolean
+  uas_fts_fitted: Boolean
+  uas_fts_manufacturer: String
+  uas_fts_model: String
+  uas_fts_independent: Boolean
+  uas_means_to_reduce_impact: String
+  uas_parachute_descentms: Int
+  uas_means_go_reduce_impact_other: String
+  uas_c2_range: Int
+  uas_ip_rating: String
+  uas_remote_id_fitted: Boolean
+  uas_anti_col_beacon: Boolean
+  uas_manual_link: String
+  uas_maintenance_manual_link: String
+  uas_ftp_manual_link: String
+  uas_other_notes: String
 }
 
 enum SORT {
@@ -103,12 +77,3 @@ enum SORT {
   DESC
 }
 
-enum RoleName {
-  MASTER_USER
-  CLIENT_USER
-  NORMAL_USER
-}
-
-type testEndpoint {
-  status: String
-}

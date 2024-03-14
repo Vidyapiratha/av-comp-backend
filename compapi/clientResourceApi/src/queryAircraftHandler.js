@@ -1,31 +1,15 @@
 "use strict";
-
 const { setAuth } = require("./middlewares/auth");
-const {
-  checkPortalClientUsernameAbility,
-  getPortalClient,
-  getPortalClients,
-} = require("./resolvers/queryClientResolver");
-
+const { getAircraftByClientIdResolver } = require("./resolvers/queryAircraftResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
 
   await setAuth(event?.identity?.claims?.sub);
-
   try {
     let result;
-
     switch (event.field) {
-      case "checkPortalClientUsernameAbility": {
-        result = await checkPortalClientUsernameAbility(event.arguments);
-        break;
-      }
-      case "getPortalClient": {
-        result = await getPortalClient(event.arguments);
-        break;
-      }
-      case "getPortalClients": {
-        result = await getPortalClients(event.arguments);
+      case "getAircraftByClientId": {
+        result = await getAircraftByClientIdResolver(event.arguments);
         break;
       }
       default:
