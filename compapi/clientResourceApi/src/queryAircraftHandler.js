@@ -1,19 +1,15 @@
 "use strict";
-
 const { setAuth } = require("./middlewares/auth");
-const { createPortalClient } = require("./resolvers/mutationClientResolver");
-
+const { getAircraftByClientIdResolver } = require("./resolvers/queryAircraftResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
 
   await setAuth(event?.identity?.claims?.sub);
-
   try {
     let result;
-
     switch (event.field) {
-      case "createPortalClient": {
-        result = await createPortalClient(event.arguments);
+      case "getAircraftByClientId": {
+        result = await getAircraftByClientIdResolver(event.arguments);
         break;
       }
       default:

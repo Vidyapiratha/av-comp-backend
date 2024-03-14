@@ -26,7 +26,7 @@ const PERMISSION_DENIED = (
 const NOT_FOUND = (message = "not found!") => {
   let error = new Error(message);
   error.name = "NOT_FOUND";
-  error.code = 403;
+  error.code = 404;
 
   return error;
 };

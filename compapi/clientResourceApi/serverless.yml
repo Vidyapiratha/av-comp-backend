@@ -6,8 +6,8 @@ frameworkVersion: "3"
 
 package:
   individually: true
-  exclude:
-    - layers/**
+  patterns:
+    - '!layers/**'
 
 provider:
   name: aws
@@ -41,7 +41,7 @@ provider:
       - ${param:subnetId}
 
   layers:
-    - { Ref: AvClientManagementCommonLibsLambdaLayer }
+    - { Ref: AvClientResourceCommonLibsLambdaLayer }
 
 plugins:
   - serverless-appsync-plugin
@@ -53,9 +53,9 @@ custom:
 
 appSync:
   name: ${self:service}-${self:provider.stage}
-  domain:
-    name: ${param:domainName}
-    certificateArn: ${param:certificateARN}
+  #domain:
+    #name: ${param:domainName}
+    #certificateArn: ${param:certificateARN}
 
   authentication:
     type: "AMAZON_COGNITO_USER_POOLS"
@@ -63,86 +63,67 @@ appSync:
       userPoolId: ${param:userPoolId}
 
   resolvers:
-    Query.checkPortalClientUsernameAbility:
-      dataSource: queryClientLambda
+    Query.getAircraftByClientId:
+      dataSource: queryAircraftLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-    Query.getPortalClient:
-      dataSource: queryClientLambda
+    Mutation.createAircraft:
+      dataSource: mutationAircraftLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-    Query.getPortalClients:
-      dataSource: queryClientLambda
+    Mutation.updateAircraft:
+      dataSource: mutationAircraftLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-
-    Query.getMe:
-      dataSource: queryUserLambda
-      request: ${self:custom.genericRequestTemplate}
-      response: ${self:custom.genericResponseTemplate}
-      kind: UNIT
-
-    Mutation.createPortalClient:
-      dataSource: mutationClientLambda
+    Mutation.updateAircraftStatus:
+      dataSource: mutationAircraftLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
 
   dataSources:
-    queryClientLambda:
+    queryAircraftLambda:
       type: AWS_LAMBDA
       description: "Get Operations DataSource"
       timeout: 30
       config:
-        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryClientHandler"
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryAircraftHandler"
         serviceRoleArn:
           Fn::GetAtt:
-            - avClientManagementServiceRole
+            - avClientResourceServiceRole
             - Arn
-    mutationClientLambda:
-      type: AWS_LAMBDA
-      description: "Create or Update Operations DataSource"
-      timeout: 30
-      config:
-        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-mutationClientHandler"
-        serviceRoleArn:
-          Fn::GetAtt:
-            - avClientManagementServiceRole
-            - Arn
-    queryUserLambda:
+    mutationAircraftLambda:
       type: AWS_LAMBDA
       description: "Get Operations DataSource"
       timeout: 30
       config:
-        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-queryUserHandler"
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-mutationAircraftHandler"
         serviceRoleArn:
           Fn::GetAtt:
-            - avClientManagementServiceRole
+            - avClientResourceServiceRole
             - Arn
 
 functions:
-  queryClientHandler:
-    handler: src/queryClientHandler.handler
-  mutationClientHandler:
-    handler: src/mutationClientHandler.handler
-  queryUserHandler:
-    handler: src/queryUserHandler.handler
+  queryAircraftHandler:
+    handler: src/queryAircraftHandler.handler
+  mutationAircraftHandler:
+    handler: src/mutationAircraftHandler.handler
 
 layers:
-  avClientManagementCommonLibs:
+  avClientResourceCommonLibs:
     path: layers
     compatibleRuntimes:
       - nodejs18.x
 
 resources:
   Resources:
-    avClientManagementServiceRole:
+    avClientResourceServiceRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: avClientManagementServiceRole-${self:provider.stage}
+        RoleName: avClientResourceServiceRole-${self:provider.stage}
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -153,7 +134,7 @@ resources:
               Action:
                 - sts:AssumeRole
         Policies:
-          - PolicyName: avClientManagementServiceRole-Policy-${self:provider.stage}
+          - PolicyName: avClientResourceServiceRole-Policy-${self:provider.stage}
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
