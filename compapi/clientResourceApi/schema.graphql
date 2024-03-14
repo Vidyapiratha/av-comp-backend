@@ -19,6 +19,15 @@ type Mutation {
     uas_model: String!
     uas_details: UasDetailInput
   ): ClientAircraft!
+
+  updateAircraft(
+    id: ID!
+    client_id: String!
+    uas_active: Boolean!
+    uas_manufacturer: String!
+    uas_model: String!
+    uas_details: UasDetailInput
+  ): ClientAircraft!
 }
 
 type AircraftResponse {

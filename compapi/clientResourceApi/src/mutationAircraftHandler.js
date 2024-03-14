@@ -1,6 +1,9 @@
 "use strict";
 const { setAuth } = require("./middlewares/auth");
-const { createAircraft } = require("./resolvers/mutationAircraftResolver");
+const {
+  createAircraft,
+  updateAircraft,
+} = require("./resolvers/mutationAircraftResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
 
@@ -10,6 +13,10 @@ module.exports.handler = async (event) => {
     switch (event.field) {
       case "createAircraft": {
         result = await createAircraft(event.arguments);
+        break;
+      }
+      case "updateAircraft": {
+        result = await updateAircraft(event.arguments);
         break;
       }
       default:
