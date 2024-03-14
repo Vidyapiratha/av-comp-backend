@@ -84,6 +84,11 @@ appSync:
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
+    Query.checkPortalUserAbility:
+      dataSource: queryUserLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
 
     Mutation.createPortalClient:
       dataSource: mutationClientLambda

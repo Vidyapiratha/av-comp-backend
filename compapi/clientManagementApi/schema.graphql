@@ -11,6 +11,7 @@ type Query {
   getPortalClient(id: ID!): PortalClient
 
   getMe: PortalUser!
+  checkPortalUserEmailAbility(email: AWSEmail): Ability!
 }
 
 type Mutation {

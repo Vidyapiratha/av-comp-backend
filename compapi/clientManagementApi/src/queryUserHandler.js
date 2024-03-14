@@ -1,7 +1,10 @@
 "use strict";
 
-const { validateIdentity } = require("./middlewares/auth");
-const { getMe } = require("./resolvers/queryUserResolver");
+const { validateIdentity, setAuth } = require("./middlewares/auth");
+const {
+  getMe,
+  checkPortalUserAbility,
+} = require("./resolvers/queryUserResolver");
 
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
@@ -10,10 +13,14 @@ module.exports.handler = async (event) => {
 
   try {
     let result;
-
     switch (event.field) {
       case "getMe": {
         result = await getMe();
+        break;
+      }
+      case "checkPortalUserAbility": {
+        await setAuth(event?.identity?.claims?.sub);
+        result = await checkPortalUserAbility();
         break;
       }
 
