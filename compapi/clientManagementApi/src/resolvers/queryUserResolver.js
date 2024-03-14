@@ -26,7 +26,7 @@ const checkPortalUserAbility = async (args) => {
     throw PERMISSION_DENIED();
   }
 
-  const existedUser = await getPortalUserIdByEmail(args.username);
+  const existedUser = await getPortalUserIdByEmail(args.email);
 
   const result = {
     is_available: existedUser ? false : true,

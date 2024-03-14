@@ -13,6 +13,7 @@ module.exports.handler = async (event) => {
 
   try {
     let result;
+
     switch (event.field) {
       case "getMe": {
         result = await getMe();
@@ -20,7 +21,7 @@ module.exports.handler = async (event) => {
       }
       case "checkPortalUserAbility": {
         await setAuth(event?.identity?.claims?.sub);
-        result = await checkPortalUserAbility();
+        result = await checkPortalUserAbility(event.arguments);
         break;
       }
 
