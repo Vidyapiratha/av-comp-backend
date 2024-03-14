@@ -63,7 +63,7 @@ appSync:
       userPoolId: ${param:userPoolId}
 
   resolvers:
-    Query.checkPortalClientUsernameAbility:
+    Query.checkPortalClientCompanyNameAbility:
       dataSource: queryClientLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
