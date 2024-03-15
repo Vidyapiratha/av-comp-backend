@@ -5,10 +5,13 @@ schema {
 
 type Query {
   getAircraftByClientId(
+    isActive: Boolean
     clientId: String
     limit: Int!
     skip: Int!
   ): AircraftResponse
+
+  getAircraftById(id: ID!): ClientAircraft
 }
 
 type Mutation {
