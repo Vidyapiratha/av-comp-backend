@@ -8,6 +8,7 @@ const {
   executeInsertOperation,
   executeUpdateOperation,
 } = require("../utils/helpers");
+
 const createAircraft = async (args) => {
   const authUser = global.auth;
   if (authUser.role_name === USER_ROLES.USER) {
@@ -26,7 +27,7 @@ const createAircraft = async (args) => {
     uas_active: args.uas_active,
     uas_manufacturer: args.uas_manufacturer?.trim(),
     uas_model: args.uas_model?.trim(),
-    uas_details: args.uas_details,
+    ...(args.uas_details && { uas_details: args.uas_details }),
     created_by: authUser.id,
     updated_by: authUser.id,
   };
@@ -57,7 +58,7 @@ const updateAircraft = async (args) => {
     uas_active: args.uas_active,
     uas_manufacturer: args.uas_manufacturer?.trim(),
     uas_model: args.uas_model?.trim(),
-    uas_details: args.uas_details,
+    ...(args.uas_details && { uas_details: args.uas_details }),
     updated_by: authUser.id,
   };
   const condition_Object = {

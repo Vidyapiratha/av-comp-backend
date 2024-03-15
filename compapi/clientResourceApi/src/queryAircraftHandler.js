@@ -1,6 +1,6 @@
 "use strict";
 const { setAuth } = require("./middlewares/auth");
-const { getAircraftByClientIdResolver } = require("./resolvers/queryAircraftResolver");
+const { getAircraftByClientIdResolver, getAircraftByIdResolver } = require("./resolvers/queryAircraftResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
 
@@ -10,6 +10,10 @@ module.exports.handler = async (event) => {
     switch (event.field) {
       case "getAircraftByClientId": {
         result = await getAircraftByClientIdResolver(event.arguments);
+        break;
+      }
+      case "getAircraftById": {
+        result = await getAircraftByIdResolver(event.arguments);
         break;
       }
       default:

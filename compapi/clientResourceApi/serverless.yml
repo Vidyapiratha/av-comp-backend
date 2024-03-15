@@ -63,6 +63,11 @@ appSync:
       userPoolId: ${param:userPoolId}
 
   resolvers:
+    Query.getAircraftById:
+      dataSource: queryAircraftLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
     Query.getAircraftByClientId:
       dataSource: queryAircraftLambda
       request: ${self:custom.genericRequestTemplate}

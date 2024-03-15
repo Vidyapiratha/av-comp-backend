@@ -41,6 +41,27 @@ const getAircraftByClientId = async ({ clientId, limit, skip }) => {
   }
 };
 
+const getAircraftById = async (id) => {
+  let queryText = `SELECT * FROM client_aircraft WHERE id = '${id}'`;
+  const query = {
+    text: queryText,
+    values: [],
+  };
+
+  try {
+    const pdDb = await pgDbPromise();
+
+    let data = await pdDb.query(query);
+    console.log("Aircraft Data", data);
+    return data;
+  } catch (error) {
+    console.log("Error on getting user:::", error);
+
+    return null;
+  }
+};
+
 module.exports = {
   getAircraftByClientId,
+  getAircraftById,
 };

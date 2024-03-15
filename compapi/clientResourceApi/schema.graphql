@@ -9,6 +9,8 @@ type Query {
     limit: Int!
     skip: Int!
   ): AircraftResponse
+
+  getAircraftById(id: ID!): ClientAircraft
 }
 
 type Mutation {
