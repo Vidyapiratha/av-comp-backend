@@ -63,7 +63,7 @@ appSync:
       userPoolId: ${param:userPoolId}
 
   resolvers:
-    Query.checkPortalClientUsernameAbility:
+    Query.checkPortalClientCompanyNameAbility:
       dataSource: queryClientLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
@@ -80,6 +80,11 @@ appSync:
       kind: UNIT
 
     Query.getMe:
+      dataSource: queryUserLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+    Query.checkPortalUserEmailAbility:
       dataSource: queryUserLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}

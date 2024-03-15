@@ -1,10 +1,10 @@
 const { pgDbPromise } = require("../database/connection");
 
-const getPortalClientIdByUsername = async (username) => {
+const getPortalClientIdByCompanyName = async (companyName) => {
   const query = {
     text: `SELECT id FROM portal_clients
-            WHERE username = $1 and NOT deleted limit 1`,
-    values: [username],
+            WHERE company_name = $1 limit 1`,
+    values: [companyName],
   };
 
   try {
@@ -12,7 +12,7 @@ const getPortalClientIdByUsername = async (username) => {
 
     const data = await pdDb.query(query);
     if (!data.length) {
-      console.log(`client not found with username: '${username}'`);
+      console.log(`client not found with company_name: '${companyName}'`);
       return null;
     }
 
@@ -24,11 +24,11 @@ const getPortalClientIdByUsername = async (username) => {
   }
 };
 
-const getPortalClientByUsername = async (username) => {
+const getPortalClientByCompanyName = async (companyName) => {
   const query = {
     text: `SELECT * FROM portal_clients
-            WHERE username = $1 and NOT deleted limit 1`,
-    values: [username],
+            WHERE company_name = $1 limit 1`,
+    values: [companyName],
   };
 
   try {
@@ -36,7 +36,7 @@ const getPortalClientByUsername = async (username) => {
 
     const data = await pdDb.query(query);
     if (!data.length) {
-      console.log(`client not found with username: '${username}'`);
+      console.log(`client not found with company_name: '${companyName}'`);
       return null;
     }
 
@@ -51,7 +51,7 @@ const getPortalClientByUsername = async (username) => {
 const getPortalClientIdById = async (id) => {
   const query = {
     text: `SELECT id FROM portal_clients
-            WHERE id = $1 and NOT deleted limit 1`,
+            WHERE id = $1 limit 1`,
     values: [id],
   };
 
@@ -75,7 +75,7 @@ const getPortalClientIdById = async (id) => {
 const getPortalClientById = async ({ id }) => {
   const query = {
     text: `SELECT * FROM portal_clients
-            WHERE id = $1 and NOT deleted limit 1`,
+            WHERE id = $1 limit 1`,
     values: [id],
   };
 
@@ -103,8 +103,7 @@ const getPortalClientsQuery = async ({
 }) => {
   let queryText = "SELECT * FROM portal_clients as p_c";
 
-  queryText += ` WHERE NOT p_c.deleted`;
-  queryText += ` Order By p_c.username ${sort} OFFSET ${offset} LIMIT ${limit}`;
+  queryText += ` Order By p_c.company_name ${sort} OFFSET ${offset} LIMIT ${limit}`;
 
   try {
     const pdDb = await pgDbPromise();
@@ -122,8 +121,8 @@ const getPortalClientsQuery = async ({
 };
 
 module.exports = {
-  getPortalClientIdByUsername,
-  getPortalClientByUsername,
+  getPortalClientIdByCompanyName,
+  getPortalClientByCompanyName,
   getPortalClientIdById,
   getPortalClientById,
   getPortalClientsQuery,

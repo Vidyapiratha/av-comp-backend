@@ -1,6 +1,7 @@
 create table "portal_user_roles" (
   id VARCHAR(255) NOT NULL PRIMARY KEY uuid_generate_v4(),
   role_name VARCHAR(255) NOT NULL,
+  role_level INT NOT NULL,
 
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -26,3 +27,11 @@ create table "portal_user_roles" (
         REFERENCES "portal_users"(id)
             ON DELETE SET NULL
 )
+
+CREATE RULE user_roles_del_protect AS ON DELETE TO portal_user_roles DO INSTEAD NOTHING;
+
+INSERT INTO portal_user_roles (role_name, role_level)
+VALUES ('MASTER', 1),
+('SUPER_ADMIN', 2),
+('ADMIN', 3),
+('USER', 4);

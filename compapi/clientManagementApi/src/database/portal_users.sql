@@ -10,22 +10,22 @@ create table "portal_users" (
 
   created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted BOOLEAN NOT NULL DEFAULT False,
-  deleted_on timestamptz NULL,
 
   created_by_id VARCHAR(255) NOT NULL,
   updated_by_id VARCHAR(255) NOT NULL,
   deleted_by_id VARCHAR(255) NULL,
 
-  CONSTRAINT fk_client_id
+  UNIQUE(email),
+
+  ADD CONSTRAINT fk_client_id
       FOREIGN KEY(client_id)
           REFERENCES "portal_clients"(id)
-              ON DELETE CASCADE,
+              ON DELETE RESTRICT,
 
   CONSTRAINT fk_user_role_id
     FOREIGN KEY(user_role_id)
         REFERENCES "portal_user_roles"(id)
-            ON DELETE SET NULL,
+            ON DELETE RESTRICT,
   
   CONSTRAINT fk_created_by_id
     FOREIGN KEY(created_by_id)
@@ -34,11 +34,6 @@ create table "portal_users" (
 
   CONSTRAINT fk_updated_by_id
     FOREIGN KEY(updated_by_id)
-        REFERENCES "portal_users"(id)
-            ON DELETE SET NULL,
-  
-  CONSTRAINT fk_deleted_by_id
-    FOREIGN KEY(deleted_by_id)
         REFERENCES "portal_users"(id)
             ON DELETE SET NULL
 )

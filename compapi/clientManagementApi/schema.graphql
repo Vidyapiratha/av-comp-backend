@@ -5,31 +5,36 @@ schema {
 }
 
 type Query {
-  checkPortalClientUsernameAbility(username: String!): Ability!
+  checkPortalClientCompanyNameAbility(company_name: String!): Ability!
 
   getPortalClients(limit: Int, offset: Int, sort: SORT): PortalClientsResponse
   getPortalClient(id: ID!): PortalClient
 
   getMe: PortalUser!
+  checkPortalUserEmailAbility(email: AWSEmail): Ability!
 }
 
 type Mutation {
   createPortalClient(
-    username: String!
-    contact_name: String
-    contact_phone: AWSPhone
-    contact_email: AWSEmail
+    company_name: String!
+    first_name: String!
+    last_name: String!
+    phone: AWSPhone!
+    email: AWSEmail!
     address: AddressInput
   ): PortalClient!
 }
 
 type PortalClient {
   id: ID!
-  username: String!
-  contact_name: String
-  contact_phone: AWSPhone
-  contact_email: AWSEmail
+  company_name: String!
+  first_name: String!
+  last_name: String!
+  phone: AWSPhone!
+  email: AWSEmail!
   enabled: Boolean
+  payment_done: Boolean
+  payment_done_at: AWSDateTime
   address: Address
   created_at: AWSDateTime
   updated_at: AWSDateTime
@@ -87,6 +92,13 @@ input AddressInput {
   country: String
 }
 
+input ClientSuperUserInput {
+  first_name: String!
+  last_name: String!
+  email: AWSEmail!
+  phone: AWSPhone!
+}
+
 type Ability {
   is_available: Boolean!
 }
@@ -105,10 +117,7 @@ enum SORT {
 
 enum RoleName {
   MASTER_USER
-  CLIENT_USER
-  NORMAL_USER
-}
-
-type testEndpoint {
-  status: String
+  SUPER_ADMIN
+  ADMIN
+  USER
 }
