@@ -1,5 +1,5 @@
 const DB_TABLES = require("../database/tables");
-const { createCognitoUser } = require("../queries/cognito");
+const { createCognitoUser, removeCognitoUser } = require("../queries/cognito");
 const { executeInsertOperation } = require("../utils/helpers");
 const { INTERNAL_SERVER_ERROR } = require("../utils/createError");
 
@@ -39,6 +39,9 @@ const createUser = async ({
     returnColumnsAsString: "*",
   });
   if (response.error) {
+    // ROLL_BACK
+    await removeCognitoUser(cognitoUser.Username);
+
     throw INTERNAL_SERVER_ERROR();
   }
 
