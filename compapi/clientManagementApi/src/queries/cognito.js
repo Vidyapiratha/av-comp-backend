@@ -68,6 +68,28 @@ const createCognitoUser = async ({
   }
 };
 
+const removeCognitoUser = async (id) => {
+  let params = {
+    UserPoolId: process.env.USER_POOL_ID,
+    Username: id,
+  };
+
+  try {
+    const data = await cognitoIdentityServiceProvider
+      .adminDeleteUser(params)
+      .promise();
+
+    console.log("cognito user deleted::", data);
+
+    return data.User;
+  } catch (error) {
+    console.log("Error on removeCognitoUser::", error);
+
+    return null;
+  }
+};
+
 module.exports = {
   createCognitoUser,
+  removeCognitoUser,
 };
