@@ -5,6 +5,7 @@ schema {
 
 type Query {
   getAircraftByClientId(
+    isActive: Boolean
     clientId: String
     limit: Int!
     skip: Int!

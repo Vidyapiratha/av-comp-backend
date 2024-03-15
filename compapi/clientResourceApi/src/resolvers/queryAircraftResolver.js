@@ -22,6 +22,7 @@ const getAircraftByClientIdResolver = async (args) => {
   }
 
   const result = await getAircraftByClientId({
+    isActive: args.isActive,
     clientId: args.clientId,
     limit: args.limit,
     skip: args.skip,

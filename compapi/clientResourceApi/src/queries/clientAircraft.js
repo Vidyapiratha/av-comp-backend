@@ -1,16 +1,30 @@
 const { pgDbPromise } = require("../database/connection");
 
-const getAircraftByClientId = async ({ clientId, limit, skip }) => {
+const getAircraftByClientId = async ({ clientId, limit, skip, isActive }) => {
   let queryText = `SELECT * FROM client_aircraft`;
-  clientId && (queryText += ` WHERE client_id = '${clientId}'`);
+  if (clientId) {
+    queryText += ` WHERE client_id = '${clientId}'`;
+    if (isActive !== null) queryText += ` AND uas_active = ${isActive}`;
+  } else {
+    if (isActive !== null) queryText += ` WHERE uas_active = ${isActive}`;
+  }
+
   queryText += ` LIMIT ${limit} OFFSET ${skip}`;
+  console.log("The query is : ", queryText);
   const query = {
     text: queryText,
     values: [],
   };
 
   let totalCountQueryText = `SELECT COUNT(*) AS totalCount FROM client_aircraft`;
-  clientId && (totalCountQueryText += ` WHERE client_id = '${clientId}'`);
+  if (clientId) {
+    totalCountQueryText += ` WHERE client_id = '${clientId}'`;
+    if (isActive !== null)
+      totalCountQueryText += ` AND uas_active = ${isActive}`;
+  } else {
+    if (isActive !== null)
+      totalCountQueryText += ` WHERE uas_active = ${isActive}`;
+  }
   const totalCountQuery = {
     text: totalCountQueryText,
     values: [],
@@ -26,7 +40,7 @@ const getAircraftByClientId = async ({ clientId, limit, skip }) => {
     }
 
     let totalCount = await pdDb.query(totalCountQuery);
-    console.log(`Total number of records ${totalCount}`);
+
     return {
       data: data.length ? data : null,
       totalCount:
