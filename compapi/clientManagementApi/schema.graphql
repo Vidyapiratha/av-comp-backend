@@ -116,7 +116,7 @@ enum SORT {
 }
 
 enum RoleName {
-  MASTER_USER
+  MASTER
   SUPER_ADMIN
   ADMIN
   USER

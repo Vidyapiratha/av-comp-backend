@@ -39,4 +39,31 @@ const executeInsertOperation = async ({
   }
 };
 
-module.exports = { executeInsertOperation };
+const generateDbJsonSelectObject = ({
+  tablesFields = [],
+  joinedTableNames = [],
+  joinedFieldNames = [],
+}) => {
+  let select = "";
+
+  for (let i in tablesFields) {
+    select += `json_build_object(${tablesFields[i]
+      .map((field) => `'${field}', ${joinedTableNames[i]}.${field}`)
+      .join(", ")}`;
+
+    if (tablesFields.length > 1) {
+      if (i != 0) select += ")";
+
+      if (i < tablesFields.length - 1) select += `, '${joinedFieldNames[i]}', `;
+    }
+  }
+
+  select += ") as data";
+
+  return select;
+};
+
+module.exports = {
+  executeInsertOperation,
+  generateDbJsonSelectObject,
+};
