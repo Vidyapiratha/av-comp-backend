@@ -12,22 +12,23 @@ module.exports.handler = async (event) => {
   const requestBody = JSON.parse(event.body);
   const { query, variables } = requestBody;
 
-
-  const operationMatch = query.match(/\b(getClientPilot|getClientPilots|getClientPilotByEmail)\b/);
+  const operationMatch = query.match(
+    /\b(getClientPilot|getClientPilots|getClientPilotByEmail)\b/
+  );
   const operationName = operationMatch ? operationMatch[0] : null;
 
   try {
     let result;
     switch (operationName) {
-      case "getClientPilot": {
+      case "getPilot": {
         result = await getClientPilot(variables);
         break;
       }
-      case "getClientPilots": {
+      case "getPilots": {
         result = await getClientPilots(variables);
         break;
       }
-      case "getClientPilotByEmail": {
+      case "getPilotByEmail": {
         result = await getClientPilotByEmail(variables);
         break;
       }
@@ -36,7 +37,7 @@ module.exports.handler = async (event) => {
     }
     return {
       statusCode: 200,
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(result),
     };
   } catch (error) {

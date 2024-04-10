@@ -3,12 +3,11 @@ const { USER_ROLES } = require("../utils/constants");
 const { PERMISSION_DENIED } = require("../utils/createError");
 const {
   getClientPilotIdById,
-  getPilotIdByEmail,
+  getClientPilotByEmail,
   getClientPilotsQuery,
 } = require("../queries/clientPilot");
 
-
-const getClientPilot = async (args) => {
+const getPilot = async (args) => {
   const authUser = global.auth;
   // if (authUser.role_name === USER_ROLES.USER) {
   //   throw PERMISSION_DENIED();
@@ -30,7 +29,7 @@ const getClientPilot = async (args) => {
   });
 };
 
-const getClientPilots = async (args) => {
+const getPilots = async (args) => {
   const authUser = global.auth;
   // if (authUser.role_name !== USER_ROLES.MASTER) throw PERMISSION_DENIED();
 
@@ -50,7 +49,7 @@ const getClientPilots = async (args) => {
   });
 };
 
-const getClientPilotByEmail = async (args) => {
+const getPilotByEmail = async (args) => {
   const authUser = global.auth;
   // if (
   //   authUser.role_name !== USER_ROLES.MASTER &&
@@ -59,7 +58,7 @@ const getClientPilotByEmail = async (args) => {
   //   throw PERMISSION_DENIED();
   // }
 
-  const result = await getPilotIdByEmail({ email: args.pilot_email });
+  const result = await getClientPilotByEmail({ email: args.pilot_email });
 
   return response({
     result,
@@ -67,7 +66,7 @@ const getClientPilotByEmail = async (args) => {
 };
 
 module.exports = {
-  getClientPilots,
-  getClientPilot,
-  getClientPilotByEmail
+  getPilot,
+  getPilots,
+  getPilotByEmail,
 };

@@ -1,10 +1,47 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Pilot {
-    id: ID!
+  id: ID!
+  clientId: ID!
+  active: Boolean!
+  firstName: String!
+  lastName: String!
+  dob: String!
+  email: String!
+  jobTitle: String!
+  portalAccess: Boolean!
+  portalRole: PortalUserRole!
+  createdOn: String!
+  createdBy: PortalUser
+  updatedOn: String!
+  updatedBy: PortalUser
+  notes: String
+}
+
+type PortalUserRole {
+  id: ID!
+  name: String!
+  pilots: [Pilot!]
+}
+
+type PortalUser {
+  id: ID!
+  name: String!
+  createdPilots: [Pilot!]
+  updatedPilots: [Pilot!]
+}
+
+type Query {
+  getPilot(id: ID!): Pilot
+  getPilots(offset: Int = 0, limit: Int = 10): [Pilot]
+  getPilotByEmail(email: String!): Pilot
+}
+
+type Mutation {
+  createPilot(
     clientId: ID!
     active: Boolean!
     firstName: String!
@@ -13,35 +50,24 @@ type Pilot {
     email: String!
     jobTitle: String!
     portalAccess: Boolean!
-    portalRole: PortalUserRole!
-    createdOn: String!
-    createdBy: PortalUser
-    updatedOn: String!
-    updatedBy: PortalUser
+    portalRole: ID!
+    createdBy: ID!
+    updatedBy: ID!
     notes: String
-}
-
-type PortalUserRole {
+  ): Pilot
+  updatePilot(
     id: ID!
-    name: String!
-    pilots: [Pilot!]
-}
-
-type PortalUser {
-    id: ID!
-    name: String!
-    createdPilots: [Pilot!]
-    updatedPilots: [Pilot!]
-}
-
-type Query {
-    getPilotById(id: ID!): Pilot
-    getPilots(offset: Int = 0, limit: Int = 10): [Pilot]
-    getPilotByEmail(email: String!): Pilot
-}
-
-type Mutation {
-    createPilot(clientId: ID!, active: Boolean!, firstName: String!, lastName: String!, dob: String!, email: String!, jobTitle: String!, portalAccess: Boolean!, portalRole: ID!, createdBy: ID!, updatedBy: ID!, notes: String): Pilot
-    updatePilot(id: ID!, clientId: ID, active: Boolean, firstName: String, lastName: String, dob: String, email: String, jobTitle: String, portalAccess: Boolean, portalRole: ID, updatedBy: ID, notes: String): Pilot
-    deletePilot(id: ID!): ID
+    clientId: ID
+    active: Boolean
+    firstName: String
+    lastName: String
+    dob: String
+    email: String
+    jobTitle: String
+    portalAccess: Boolean
+    portalRole: ID
+    updatedBy: ID
+    notes: String
+  ): Pilot
+  deletePilot(id: ID!): ID
 }

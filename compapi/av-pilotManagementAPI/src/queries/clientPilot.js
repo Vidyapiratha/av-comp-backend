@@ -2,8 +2,8 @@ const { pgDbPromise } = require("../database/connection");
 
 const getClientPilotIdById = async (id) => {
   const query = {
-    name: 'fetch-client-pilot-by-id',
-    text: 'SELECT id FROM client_pilots WHERE id = $1 LIMIT 1',
+    name: "fetch-client-pilot-by-id",
+    text: "SELECT id FROM client_pilots WHERE id = $1 LIMIT 1",
     values: [id.id],
   };
   console.log(id);
@@ -26,10 +26,10 @@ const getClientPilotIdById = async (id) => {
 };
 
 // Function to get a pilot ID by email using a parameterized query
-const getPilotIdByEmail = async (email) => {
+const getClientPilotByEmail = async (email) => {
   const query = {
-    name: 'fetch-client-pilot-by-email',
-    text: 'SELECT id FROM client_pilots WHERE pilot_email = $1 LIMIT 1',
+    name: "fetch-client-pilot-by-email",
+    text: "SELECT id FROM client_pilots WHERE pilot_email = $1 LIMIT 1",
     values: [email],
   };
 
@@ -49,10 +49,13 @@ const getPilotIdByEmail = async (email) => {
   }
 };
 
-
-const getClientPilotsQuery = async ({ offset = 0, limit = 1, sort = "ASC" }) => {
+const getClientPilotsQuery = async ({
+  offset = 0,
+  limit = 1,
+  sort = "ASC",
+}) => {
   const query = {
-    name: 'fetch-client-pilots',
+    name: "fetch-client-pilots",
     text: `SELECT * FROM client_pilots ORDER BY pilot_firstname ${sort} OFFSET $1 LIMIT $2`,
     values: [offset, limit],
   };
@@ -71,6 +74,6 @@ const getClientPilotsQuery = async ({ offset = 0, limit = 1, sort = "ASC" }) => 
 
 module.exports = {
   getClientPilotIdById,
-  getPilotIdByEmail,
+  getClientPilotByEmail,
   getClientPilotsQuery,
 };

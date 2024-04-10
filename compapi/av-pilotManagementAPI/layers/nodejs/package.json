@@ -6,9 +6,7 @@
   "dependencies": {
     "aws-sdk": "^2.1592.0",
     "graphql": "^16.8.1",
-    "pg": "^8.11.5",
     "pg-promise": "^11.6.0",
-    "serverless-appsync-plugin": "^2.7.0",
     "uuid": "^9.0.1"
   },
   "keywords": [],

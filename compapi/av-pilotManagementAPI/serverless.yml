@@ -8,6 +8,7 @@ package:
   individually: true
   exclude:
     - layers/**
+    - node_modules/**
 
 provider:
   name: aws
@@ -59,23 +60,23 @@ appSync:
     name: ${param:domainName}
     certificateArn: ${param:certificateARN}
 
-  authentication:
-    type: "AMAZON_COGNITO_USER_POOLS"
-    config:
-      userPoolId: ${param:userPoolId}
+#  authentication:
+#    type: "AMAZON_COGNITO_USER_POOLS"
+#    config:
+#      userPoolId: ${param:userPoolId}
 
   resolvers:
-    Query.getClientPilotIdById:
+    Query.getPilot:
       dataSource: queryClientPilotLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-    Query.getPilotIdByEmail:
+    Query.getPilots:
       dataSource: queryClientPilotLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
-    Query.getClientPilotsQuery:
+    Query.getPilotByEmail:
       dataSource: queryClientPilotLambda
       request: ${self:custom.genericRequestTemplate}
       response: ${self:custom.genericResponseTemplate}
