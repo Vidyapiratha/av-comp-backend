@@ -23,14 +23,21 @@ const getPilot = async (args) => {
   //   }
   // }
   const result = await getClientPilotIdById({ id: args.id });
-
+  console.log(result);
+  if (result.length === 0) {
+    return response({
+      message: "No Pilot records available for the provided ID",
+    });
+  }
   return response({
     result,
   });
 };
 
 const getPilots = async (args) => {
-  const authUser = global.auth;
+  // const authUser = global.auth;
+  // console.log("global:: ", global);
+  // console.log("authUser:: ", authUser);
   // if (authUser.role_name !== USER_ROLES.MASTER) throw PERMISSION_DENIED();
 
   let limit = args.limit || 10;
@@ -43,6 +50,11 @@ const getPilots = async (args) => {
     sort,
   });
   console.log("results:: ", result);
+  if (result.length === 0) {
+    return response({
+      message: "No Pilot records available",
+    });
+  }
   return response({
     result: result,
     others: args,

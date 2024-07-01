@@ -60,10 +60,10 @@ appSync:
     name: ${param:domainName}
     certificateArn: ${param:certificateARN}
 
-#  authentication:
-#    type: "AMAZON_COGNITO_USER_POOLS"
-#    config:
-#      userPoolId: ${param:userPoolId}
+  authentication:
+    type: "AMAZON_COGNITO_USER_POOLS"
+    config:
+      userPoolId: ${param:userPoolId}
 
   resolvers:
     Query.getPilot:
@@ -82,6 +82,17 @@ appSync:
       response: ${self:custom.genericResponseTemplate}
       kind: UNIT
 
+    Mutation.createPilot:
+      dataSource: mutationClientPilotLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+    Mutation.updatePilot:
+      dataSource: mutationClientPilotLambda
+      request: ${self:custom.genericRequestTemplate}
+      response: ${self:custom.genericResponseTemplate}
+      kind: UNIT
+
   dataSources:
     queryClientPilotLambda:
       type: AWS_LAMBDA
@@ -93,12 +104,22 @@ appSync:
           Fn::GetAtt:
             - avClientPilotResourceServiceRole
             - Arn
+    mutationClientPilotLambda:
+      type: AWS_LAMBDA
+      description: "Create or Update Operations DataSource"
+      timeout: 30
+      config:
+        functionArn: "arn:aws:lambda:${self:provider.region}:${param:account}:function:${self:service}-${self:provider.stage}-mutationClientPilotHandler"
+        serviceRoleArn:
+          Fn::GetAtt:
+            - avClientPilotResourceServiceRole
+            - Arn
 
 functions:
   queryClientPilotHandler:
     handler: src/queryClientPilotHandler.handler
-#  mutationPilotHandler:
-#    handler: src/mutationClientPilotHandler.handler
+  mutationClientPilotHandler:
+    handler: src/mutationClientPilotHandler.handler
 
 layers:
   avPilotManagementCommonLibs:

@@ -18,6 +18,14 @@ const PERMISSION_DENIED = (
 ) => {
   let error = new Error(message);
   error.name = "PERMISSION_DENIED";
+  error.code = 401;
+
+  return error;
+};
+
+const INVALID_FORMAT = (message = "Invalid Format in input field!") => {
+  let error = new Error(message);
+  error.name = "INVALID_FORMAT";
   error.code = 403;
 
   return error;
@@ -44,4 +52,5 @@ module.exports = {
   NOT_FOUND,
   PERMISSION_DENIED,
   INTERNAL_SERVER_ERROR,
+  INVALID_FORMAT,
 };

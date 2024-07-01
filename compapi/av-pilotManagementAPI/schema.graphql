@@ -6,19 +6,19 @@ schema {
 type Pilot {
   id: ID!
   clientId: ID!
-  active: Boolean!
-  firstName: String!
-  lastName: String!
-  dob: String!
-  email: String!
-  jobTitle: String!
-  portalAccess: Boolean!
-  portalRole: PortalUserRole!
-  createdOn: String!
-  createdBy: PortalUser
-  updatedOn: String!
-  updatedBy: PortalUser
-  notes: String
+  pilot_active: Boolean!
+  pilot_firstname: String!
+  pilot_lastname: String!
+  pilot_dob: String!
+  pilot_email: String!
+  pilot_jobtitle: String!
+  pilot_portal_access: Boolean!
+  pilot_portal_role: PortalUserRole!
+  pilot_created_on: String!
+  pilot_created_by: PortalUser
+  pilot_updated_on: String!
+  pilot_updated_by: PortalUser
+  pilot_notes: String
 }
 
 type PortalUserRole {
@@ -43,31 +43,35 @@ type Query {
 type Mutation {
   createPilot(
     clientId: ID!
-    active: Boolean!
-    firstName: String!
-    lastName: String!
-    dob: String!
-    email: String!
-    jobTitle: String!
-    portalAccess: Boolean!
-    portalRole: ID!
-    createdBy: ID!
-    updatedBy: ID!
-    notes: String
-  ): Pilot
+    pilot_active: Boolean!
+    pilot_firstname: String!
+    pilot_lastname: String!
+    pilot_dob: String!
+    pilot_email: String!
+    pilot_jobtitle: String!
+    pilot_portal_access: Boolean!
+    pilot_portal_role: ID!
+    pilot_created_by: ID!
+    pilot_updated_by: ID!
+    pilot_notes: String
+  ): PilotResponse
   updatePilot(
-    id: ID!
+    id: ID
     clientId: ID
-    active: Boolean
-    firstName: String
-    lastName: String
-    dob: String
-    email: String
-    jobTitle: String
-    portalAccess: Boolean
-    portalRole: ID
-    updatedBy: ID
-    notes: String
-  ): Pilot
-  deletePilot(id: ID!): ID
+    pilot_active: Boolean
+    pilot_firstname: String
+    pilot_lastname: String
+    pilot_dob: String
+    pilot_email: String!
+    pilot_jobtitle: String
+    pilot_portal_access: Boolean
+    pilot_portal_role: ID
+    pilot_updated_by: ID
+    pilot_notes: String
+  ): PilotResponse
+}
+
+type PilotResponse {
+  message: String!
+  result: Pilot
 }

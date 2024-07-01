@@ -1,24 +1,23 @@
 const { pgDbPromise } = require("../database/connection");
 
-const getClientPilotIdById = async (id) => {
+const getClientPilotIdById = async (arguments) => {
   const query = {
     name: "fetch-client-pilot-by-id",
     text: "SELECT id FROM client_pilots WHERE id = $1 LIMIT 1",
-    values: [id.id],
+    values: [arguments.id],
   };
-  console.log(id);
-  console.log(id.id);
+  console.log(arguments.id);
 
   try {
     const pdDb = await pgDbPromise();
     const data = await pdDb.oneOrNone(query);
 
     if (!data) {
-      console.log(`Client Pilot not found with id: '${id}'`);
+      console.log(`Client Pilot not found with id: '${arguments.id}'`);
       return null;
     }
 
-    return data.id;
+    return data;
   } catch (error) {
     console.error("Error on getting client Pilot:", error);
     throw error; // It's often better to throw the error so the calling function can handle it
@@ -26,7 +25,7 @@ const getClientPilotIdById = async (id) => {
 };
 
 // Function to get a pilot ID by email using a parameterized query
-const getClientPilotByEmail = async (email) => {
+const getClientPilotByEmail = async ({ email }) => {
   const query = {
     name: "fetch-client-pilot-by-email",
     text: "SELECT id FROM client_pilots WHERE pilot_email = $1 LIMIT 1",
@@ -41,8 +40,7 @@ const getClientPilotByEmail = async (email) => {
       console.log(`User not found with email: '${email}'`);
       return null;
     }
-
-    return data.id;
+    return data;
   } catch (error) {
     console.error("Error on getting client Pilot:", error);
     throw error;

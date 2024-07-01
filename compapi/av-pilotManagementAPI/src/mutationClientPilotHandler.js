@@ -2,8 +2,8 @@
 
 // const { setAuth } = require("./middlewares/auth");
 const {
-  createClientPilot,
-  updateClientPilot,
+  createPilot,
+  updatePilot,
 } = require("./resolvers/mutationClientPilotResolver");
 module.exports.handler = async (event) => {
   console.log("Received event:", JSON.stringify(event, 3));
@@ -13,18 +13,20 @@ module.exports.handler = async (event) => {
     console.log(event, "event");
     let result;
     switch (event.field) {
-      case "createClientPilot": {
+      case "createPilot": {
         console.log("Working!!");
-        result = await createClientPilot(event.arguments);
+        result = await createPilot(event.arguments);
         break;
       }
-      case "updateClientPilot": {
-        result = await updateClientPilot(event.arguments);
+      case "updatePilot": {
+        result = await updatePilot(event.arguments);
         break;
       }
       default:
         throw `Unknown field, unable to resolve ${event.field}`;
     }
+
+    console.log("final result:: ", result);
 
     return result;
   } catch (error) {

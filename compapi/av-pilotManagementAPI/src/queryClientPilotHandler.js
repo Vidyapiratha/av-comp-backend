@@ -1,39 +1,33 @@
 "use strict";
 const { setAuth } = require("./middlewares/auth");
 const {
-  getClientPilot,
-  getClientPilots,
-  getClientPilotByEmail,
+  getPilot,
+  getPilots,
+  getPilotByEmail,
 } = require("./resolvers/queryClientPilotResolver");
 
 module.exports.handler = async (event) => {
-  console.log("Received event:", JSON.stringify(event, null, 2));
+  console.log("Received event: ", JSON.stringify(event, null, 2));
 
-  const requestBody = JSON.parse(event.body);
-  const { query, variables } = requestBody;
-
-  const operationMatch = query.match(
-    /\b(getClientPilot|getClientPilots|getClientPilotByEmail)\b/
-  );
-  const operationName = operationMatch ? operationMatch[0] : null;
+  // await setAuth(event?.identity?.claims?.sub);
 
   try {
     let result;
-    switch (operationName) {
+    switch (event.field) {
       case "getPilot": {
-        result = await getClientPilot(variables);
+        result = await getPilot(event.arguments);
         break;
       }
       case "getPilots": {
-        result = await getClientPilots(variables);
+        result = await getPilots(event.arguments);
         break;
       }
       case "getPilotByEmail": {
-        result = await getClientPilotByEmail(variables);
+        result = await getPilotByEmail(event.arguments);
         break;
       }
       default:
-        throw `Unknown operation, unable to resolve ${operationName}`;
+        throw `Unknown operation, unable to resolve ${event.field}`;
     }
     return {
       statusCode: 200,

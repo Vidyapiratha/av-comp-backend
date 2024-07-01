@@ -1,22 +1,26 @@
 module.exports = ({ result, others = {} }) => {
-  if (Array.isArray(result.data)) {
-    let nextOffset =
-      others?.limit === result?.data?.length
-        ? (others.offset || 0) + result.data.length
-        : null;
+  if (result && result.data) {
+    const isArrayResult = Array.isArray(result.data);
+    const itemCount = isArrayResult ? result.data.length : 1;
+    const nextOffset =
+        isArrayResult && others.limit === result.data.length
+            ? (others.offset || 0) + result.data.length
+            : null;
 
     return {
       items: result.data,
-      count: result.data.length,
-      nextOffset: nextOffset,
-      totalCount: result.totalCount,
+      count: itemCount,
+      nextOffset: nextOffset || 0,
+      totalCount: result.totalCount || itemCount,
     };
   }
 
+  console.log("Returning empty result");
+
   return {
-    items: result.data || [],
-    count: result.data ? result.data.length : 0,
+    items: [],
+    count: 0,
     nextOffset: 0,
-    totalCount: result.totalCount,
+    totalCount: 0,
   };
 };

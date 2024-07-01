@@ -10,6 +10,13 @@ const setAuth = async (userId) => {
   global.auth = user;
 };
 
+const validateIdentity = async (identity) => {
+  if (!identity?.claims?.sub) throw Error("Unauthorized!");
+
+  global.sub = identity.claims.sub;
+};
+
 module.exports = {
   setAuth,
+  validateIdentity,
 };
